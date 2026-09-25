@@ -30,6 +30,14 @@ exports.getValidatedMembers = async (req, res) => {
 
   res.json(members);
 };
+// GET /api/public/members/:id  (accès site requis) — page dédiée d'un membre validé
+exports.getValidatedMemberDetail = async (req, res) => {
+  const member = await Member.findOne({ _id: req.params.id, status: "validated" }).select(
+    "nom prenom ville email whatsapp tiktok facebook autresDetails photoBase64"
+  );
+  if (!member) return res.status(404).json({ message: "Membre introuvable." });
+  res.json(member);
+};
 
 // --- Côté admin (les 3 comptes) ---
 
