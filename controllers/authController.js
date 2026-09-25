@@ -24,7 +24,9 @@ exports.verifySiteAccess = async (req, res) => {
 // POST /api/admin/login  { username, password }
 exports.adminLogin = async (req, res) => {
   const { username, password } = req.body;
-  const admin = await Admin.findOne({ username: username?.trim().toLowerCase() });
+  const admin = await Admin.findOne({
+  username: { $regex: new RegExp(`^${username?.trim()}$`, "i") },
+});
   if (!admin) return res.status(401).json({ message: "Identifiants incorrects." });
 
   const ok = await bcrypt.compare(password || "", admin.passwordHash);
